@@ -18,6 +18,8 @@ Ryan in the kitchen, roasting a basketball on the stove - "Ryan" and
 '''
 
 # TODO Catch errors
+# TODO Test on name memory at certain intervals (review)
+# TODO Add tags to people like school, work, etc
 
 memory = namedtuple('memory', ['room', 'name', 'action'])
 
