@@ -1,6 +1,6 @@
-def memory_palace():
+from collections import namedtuple
 
-    from collections import namedtuple
+def memory_palace():
 
     '''
     A palace is a way to remember things. You create 'rooms' and then place things
