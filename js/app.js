@@ -1,11 +1,5 @@
 Parse.initialize("NR17YzLLSdbUtQgdtr0WTSHOobI750DpK5t41fEF", "Eb2FWgOYHfaORrl7JaUqSe2kLGljuF3SUVWZZlEg");
 
-var TestObject = Parse.Object.extend("TestObject");
-var testObject = new TestObject();
-testObject.save({foo: "bar"}).then(function(object) {
-  alert("yay! it worked");
-});
-
 var name_palace = [];
 var name_palace_html = '';
 var current_room_index = 0;
@@ -24,7 +18,39 @@ $('#add_room_form').submit(function(event){
     $('#room_name').val('');
 
     // Add the room name to the array
-    name_palace.push([room,'','']);
+    name_palace.push([room,'','','']);
+
+    // Add the room name to Parse
+    var Memory = Parse.Object.extend("Memory");
+    var memory = new Memory();
+
+    memory.set("room", room);
+    memory.save(null, {
+      success: function(memory) {
+        // Execute any logic that should take place after the object is saved.
+        alert('Created Object ID: ' + memory.id);
+      },
+      error: function(memory, error) {
+        // Execute any logic that should take place if the save fails.
+        // error is a Parse.Error with an error code and description.
+        alert('Failed to create new object, with error code: ' + error.message);
+      }
+    });
+
+    var query = new Parse.Query(Memory);
+    query.get(objectId, {
+      success: function(memory) {
+        // The object was retrieved successfully.
+        // do something with it
+        name_palace[room_index][3] = objectId;
+      },
+      error: function(object, error) {
+        // The object was not retrieved successfully.
+        // warn the user
+      }
+    });
+
+
 
     // Build the ordered list of rooms in this format
     /*
@@ -81,6 +107,37 @@ $('#add_memory_form').submit(function(event){
     // Add the person's name and action to the room
     name_palace[current_room_index][1] = $('#person_name').val();
     name_palace[current_room_index][2] = $('#person_action').val();
+
+    // Save the data to Parse
+    var objectID = name_palace[current_room_index][3];
+    console.log("ObjectID: "+objectID);
+
+    var Memory = Parse.Object.extend("Memory");
+    var query = new Parse.Query(Memory);
+    query.get(objectID, {
+      success: function(memory) {
+        // The object was retrieved successfully.
+        console.log("Updated stuff");
+        memory.set("person_name", $('#person_name').val());
+        memory.set("action", $('#person_action').val());
+        memory.save(null, {
+          success: function(memory) {
+            // Execute any logic that should take place after the object is saved.
+            alert('New object created with objectId: ' + memory.id);
+          },
+          error: function(memory, error) {
+            // Execute any logic that should take place if the save fails.
+            // error is a Parse.Error with an error code and description.
+            alert('Failed to create new object, with error code: ' + error.message);
+          }
+        });
+      },
+      error: function(object, error) {
+        // The object was not retrieved successfully.
+        // error is a Parse.Error with an error code and description.
+        console.log("Error retrieving data: "+error);
+      }
+    });
 
     // Update the ordered list
     $('#memory'+current_room_index).append('<li>Name: '+$('#person_name').val()+'</li><li>Action: '+$('#person_action').val()+'</li>');
