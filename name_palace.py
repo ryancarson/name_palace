@@ -27,6 +27,6 @@ class Name_Palace:
     
     print("\nOK, great! Here is your completed Memory Palace ...\n")
     for room in self.rooms:
-      print("Room: {}, Person's Name: {}, Action: {}".format(room.name, room.person_name, room.action))
+      print("Room: {name}, Person's Name: {person_name}, Action: {action}".format(**room.__dict__))
     
 Name_Palace()
