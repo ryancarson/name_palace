@@ -7,7 +7,7 @@ class Name_Palace:
   def add_memories(self):
     
     print("\nNow you can start putting names and actions into those rooms.\n"
-          "The more crazy and memorable the actions, the better!\n")
+          "The more crazy and memorable the actions, the better!!\n")
     
     for room in self.rooms:
       print("Room: {}".format(room.name))
